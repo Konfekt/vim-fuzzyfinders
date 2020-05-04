@@ -62,6 +62,18 @@ if exists('s:dir_cmd')
   command! -complete=dir -nargs=1 FuzzyFinderDir call fuzzyfinders#command(s:dir_cmd, 'Explore', 'directory > ')
 endif
 
+if has('unix') && executable('chrt') && executable('ionice')
+    let s:scheduler = 'chrt --idle 0 ionice -c2 -n7 '
+elseif has('win32')
+    let s:scheduler = (&shell =~? '\v(^|\\)cmd\.exe$' ? '' : 'cmd.exe ')
+                \ . 'start /B /LOW'
+else
+    let s:scheduler = ''
+endif
+let s:file_cmd = s:scheduler . ' ' . s:file_cmd
+let s:dir_cmd  = s:scheduler . ' ' . s:dir_cmd
+unlet s:scheduler
+
 " ------------------------------------------------------------------------------
 let &cpo= s:keepcpo
 unlet s:keepcpo

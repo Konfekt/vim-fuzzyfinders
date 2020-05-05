@@ -1,12 +1,12 @@
 This is a minimalist's Vim plug-in that selects a sensible
 
-- fuzzy matcher (among, in this order, `sk`, `fzy`, `peco` and `fzf`) and
+- fuzzy matcher (among, in this order, `sk`, `fzy`, `fzf` and `peco`) and
 - file finder (among, in this order, `fd`, `ripgrep`, `ag`, `find` and `dir`)
 
 to provide
 
-- commands `:FuzzyFinderFile` and `:FuzzyFinderDir` for fuzzy selecting a file respectively directory in the supplied directory, for example, `FuzzyFinderFile .`, and
-- mappings `<c-p>` and `g<c-p>` in normal mode (in terminal Vim) for fuzzy selecting a file in the current working directory respectively in that of the currently open buffer.
+- commands `:FuzzyFinderFile` and `:FuzzyFinderDir` for fuzzy selecting a file respectively directory in the supplied directory, for example, `FuzzyFinderDir .`, and
+- mappings `<c-p>` and `g<c-p>` in normal mode (in terminal Vim) that call `:FuzzyFinderFile` for fuzzy selecting a file in the current working directory respectively in that of the currently open buffer.
 
 # Setup
 
@@ -28,6 +28,6 @@ in your `vimrc`.
 For example, to disable the mapping `<c-p>`,
 
 ```vim
-nmap  <sid>(DisableFindWorkDir)  <Plug>(FindWorkDir)
+nmap  <sid>(DisableFuzzyFindFileWorkDir)  <Plug>(FuzzyFindFileWorkDir)
 ```
 

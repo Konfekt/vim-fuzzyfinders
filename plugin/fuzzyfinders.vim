@@ -11,10 +11,10 @@ nnoremap <Plug>(FuzzyFindFileWorkDir) :<c-u>FuzzyFinderFile .<CR>
 nnoremap <Plug>(FuzzyFindFileBufferDir) :<c-u>FuzzyFinderFile %:p:h<CR>
 
 if !has('gui_running')
-  if !hasmapto('<Plug>(FindWorkDir)', 'n')
+  if !hasmapto('<Plug>(FuzzyFindFileWorkDir)', 'n')
     silent! nmap <unique>  <c-p>  <Plug>(FuzzyFindFileWorkDir)
   endif
-  if !hasmapto('<Plug>(FindFileDir)', 'n')
+  if !hasmapto('<Plug>(FuzzyFindFileBufferDir)', 'n')
     silent! nmap <unique> g<c-p>  <Plug>(FuzzyFindFileBufferDir)
   endif
 endif
@@ -29,7 +29,7 @@ if !(exists('g:fuzzyfinders_matcher') && executable(split(g:fuzzyfinders_matcher
   elseif executable('peco')
     let g:fuzzyfinders_matcher = 'peco'
   else
-    echomsg "fuzzyfinders.vim: No fuzzy finder in terminal available. Please install a fuzzy finder such as sk, fzy, peco, fzf or point g:fuzzyfinders_matcher to a valid executable!"
+    echomsg "Please install a fuzzy matcher such as sk, fzy, fzf, peco or point g:fuzzyfinders_matcher to a valid executable!"
     finish
   endif
 endif

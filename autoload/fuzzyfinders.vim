@@ -1,5 +1,63 @@
-if !(exists('g:fuzzyfinders_matcher') && executable(split(g:fuzzyfinders_matcher)[0]))
+for fuzzyfinders_matcher in fuzzyfinders_matchers
+  if executable(split(g:fuzzyfinders_matcher)[0])
+    let g:fuzzyfinders_matcher = fuzzyfinders_matcher
+    break
+  endif
+endfor
+
+if !exists('g:fuzzyfinders_matcher')
+  echomsg "Please install a fuzzy matcher such as sk, fzy, fzf, peco or point g:fuzzyfinders_matchers to valid executables!"
   finish
+endif
+
+for fuzzyfinders_file_cmd in fuzzyfinders_file_cmds
+  if executable(split(g:fuzzyfinders_file_cmd)[0])
+    let g:fuzzyfinders_file_cmd = fuzzyfinders_file_cmd
+    break
+  endif
+endfor
+
+if !exists('g:fuzzyfinders_file_cmd')
+  if has('unix')
+    let g:fuzzyfinders_file_cmd = 'find -L . -type f'
+  elseif has('win32')
+    let g:fuzzyfinders_file_cmd = 'dir . /-n /b /s /a-d'
+  else
+    echomsg "Please install a file finder such as fd, ripgrep or the silver searcher or point g:fuzzyfinders_file_cmds to valid executables!"
+    finish
+  endif
+endif
+
+for fuzzyfinders_dir_cmd in fuzzyfinders_dir_cmds
+  if executable(split(g:fuzzyfinders_dir_cmd)[0])
+    let g:fuzzyfinders_dir_cmd = fuzzyfinders_dir_cmd
+    break
+  endif
+endfor
+
+if !exists('g:fuzzyfinders_dir_cmd')
+  if has('unix')
+    let g:fuzzyfinders_dir_cmd = 'find -L . -type d'
+  elseif has('win32')
+    let g:fuzzyfinders_dir_cmd = 'dir . /-n /b /s /a:d'
+  else
+    echomsg "Please install a directory finder such as fd or point g:fuzzyfinders_dir_cmds to valid executables!"
+    finish
+  endif
+endif
+
+if g:fuzzyfinders_use_scheduler
+  if has('unix') && executable('chrt') && executable('ionice')
+      let s:scheduler = 'chrt --idle 0 ionice -c2 -n7 '
+  elseif has('win32')
+      let s:scheduler = (&shell =~? '\v(^|\\)cmd\.exe$' ? '' : 'cmd.exe ')
+                  \ . 'start /B /LOW'
+  else
+      let s:scheduler = ''
+  endif
+  let g:fuzzyfinders_file_cmd = s:scheduler . ' ' . g:fuzzyfinders_file_cmd
+  let g:fuzzyfinders_dir_cmd  = s:scheduler . ' ' . g:fuzzyfinders_dir_cmd
+  unlet s:scheduler
 endif
 
 let s:slash = exists('+shellslash') && !&shellslash ? '\' : '/'

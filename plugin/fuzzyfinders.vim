@@ -7,72 +7,48 @@ let s:keepcpo         = &cpo
 set cpo&vim
 " ------------------------------------------------------------------------------
 
-nnoremap <Plug>(FuzzyFindFileWorkDir) :<c-u>FuzzyFinderFile .<CR>
-nnoremap <Plug>(FuzzyFindFileBufferDir) :<c-u>FuzzyFinderFile %:p:h<CR>
+if !exists('g:fuzzyfinders_matchers')
+  let g:fuzzyfinders_matchers = [
+  \ 'sk',
+  \ 'fzy',
+  \ 'fzf',
+  \ 'peco',
+  \ ]
+endif
+
+if !exists('g:fuzzyfinders_file_cmds')
+  let g:fuzzyfinders_file_cmds = [
+  \ 'fd -L --type file --hidden --no-ignore --exclude .git/ --color never ' . (has('win32') ? '--fixed-strings ' : '') . '"" .',
+  \ 'rg --glob "" --files --hidden --no-ignore --iglob !.git/ --color never "" .' ,
+  \ 'ag --files-with-matches --unrestricted --ignore .git/ --nocolor --silent --filename-pattern "" .',
+  \ ]
+endif
+
+if !exists('g:fuzzyfinders_dir_cmds')
+  let g:fuzzyfinders_dir_cmds = [
+        \ 'fd -L --type directory --hidden --no-ignore --exclude .git/ --color never ' . (has('win32') ? '--fixed-strings ' : '') . ' "" .',
+        \ ]
+endif
+
+if !exists('g:fuzzyfinders_use_scheduler')
+  let g:fuzzyfinders_use_scheduler = 1
+endif
+
+nnoremap <Plug>(FuzzyFinderFileWorkDir) :<c-u>FuzzyFinderFile .<CR>
+nnoremap <Plug>(FuzzyFinderFileBufferDir) :<c-u>FuzzyFinderFile %:p:h<CR>
 
 if !has('gui_running')
-  if !hasmapto('<Plug>(FuzzyFindFileWorkDir)', 'n')
-    silent! nmap <unique>  <c-p>  <Plug>(FuzzyFindFileWorkDir)
+  if !hasmapto('<Plug>(FuzzyFinderFileWorkDir)', 'n')
+    silent! nmap <unique>  <c-p>  <Plug>(FuzzyFinderFileWorkDir)
   endif
-  if !hasmapto('<Plug>(FuzzyFindFileBufferDir)', 'n')
-    silent! nmap <unique> g<c-p>  <Plug>(FuzzyFindFileBufferDir)
-  endif
-endif
-
-if !(exists('g:fuzzyfinders_matcher') && executable(split(g:fuzzyfinders_matcher)[0]))
-  if executable('sk')
-    let g:fuzzyfinders_matcher = 'sk'
-  elseif executable('fzy')
-    let g:fuzzyfinders_matcher = 'fzy'
-  elseif executable('fzf')
-    let g:fuzzyfinders_matcher = 'fzf'
-  elseif executable('peco')
-    let g:fuzzyfinders_matcher = 'peco'
-  else
-    echomsg "Please install a fuzzy matcher such as sk, fzy, fzf, peco or point g:fuzzyfinders_matcher to a valid executable!"
-    finish
+  if !hasmapto('<Plug>(FuzzyFinderFileBufferDir)', 'n')
+    silent! nmap <unique> g<c-p>  <Plug>(FuzzyFinderFileBufferDir)
   endif
 endif
 
-if executable('fd')
-  let s:file_cmd = 'fd -L --type file --full-path --hidden --no-ignore-vcs --exclude .git/ --color never ' . (has('win32') ? '--fixed-strings ' : '') . ' .'
-elseif executable('rg')
-  let s:file_cmd = 'rg --glob "" --files --hidden --no-ignore-vcs --iglob !.git/ --color never .'
-elseif executable('ag')
-  let s:file_cmd = 'ag --filename-pattern "" --files-with-matches --hidden --skip-vcs-ignores --ignore .git/ --silent --nocolor .'
-elseif has('unix')
-  let s:file_cmd = 'find -L . -type f'
-elseif has('win32')
-  let s:file_cmd = 'dir . /-n /b /s /a-d'
-endif
+command! -complete=dir -nargs=1 FuzzyFinderFile call fuzzyfinders#command(g:fuzzyfinders_file_cmd, <q-args>, 'edit', 'file >')
 
-if exists('s:file_cmd')
-  command! -complete=dir -nargs=1 FuzzyFinderFile call fuzzyfinders#command(s:file_cmd, <q-args>, 'edit', 'file >')
-endif
-
-if executable('fd')
-  let s:dir_cmd = 'fd --type directory --full-path --no-ignore --hidden ' . (has('win32') ? '--fixed-strings ' : '') . ' .'
-elseif has('unix')
-  let s:dir_cmd = 'find -L . -type d'
-elseif has('win32')
-  let s:dir_cmd = 'dir . /-n /b /s /a:d'
-endif
-
-if exists('s:dir_cmd')
-  command! -complete=dir -nargs=1 FuzzyFinderDir call fuzzyfinders#command(s:dir_cmd, 'Explore', 'directory > ')
-endif
-
-if has('unix') && executable('chrt') && executable('ionice')
-    let s:scheduler = 'chrt --idle 0 ionice -c2 -n7 '
-elseif has('win32')
-    let s:scheduler = (&shell =~? '\v(^|\\)cmd\.exe$' ? '' : 'cmd.exe ')
-                \ . 'start /B /LOW'
-else
-    let s:scheduler = ''
-endif
-let s:file_cmd = s:scheduler . ' ' . s:file_cmd
-let s:dir_cmd  = s:scheduler . ' ' . s:dir_cmd
-unlet s:scheduler
+command! -complete=dir -nargs=1 FuzzyFinderDir call fuzzyfinders#command(g:fuzzyfinders_dir_cmd, 'Explore', 'directory > ')
 
 " ------------------------------------------------------------------------------
 let &cpo= s:keepcpo

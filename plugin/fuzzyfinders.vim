@@ -24,11 +24,21 @@ if !exists('g:fuzzyfinders_file_cmds')
   \ 'ag --files-with-matches --unrestricted --ignore .git/ --nocolor --silent --filename-pattern "" .',
   \ ]
 endif
+if has('unix')
+  let g:fuzzyfinders_file_cmds += [ 'find -L . -type f' ]
+elseif has('win32')
+  let g:fuzzyfinders_file_cmds += [ 'dir . /-n /b /s /a-d' ]
+endif
 
 if !exists('g:fuzzyfinders_dir_cmds')
   let g:fuzzyfinders_dir_cmds = [
         \ 'fd -L --type directory --hidden --no-ignore --exclude .git/ --color never ' . (has('win32') ? '--fixed-strings ' : '') . ' "" .',
         \ ]
+endif
+if has('unix')
+  let g:fuzzyfinders_dir_cmds += [ 'find -L . -type d' ]
+elseif has('win32')
+  let g:fuzzyfinders_dir_cmds += [ 'dir . /-n /b /s /a:d' ]
 endif
 
 if !exists('g:fuzzyfinders_use_scheduler')

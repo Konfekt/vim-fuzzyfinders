@@ -18,14 +18,8 @@ for fuzzyfinders_file_cmd in fuzzyfinders_file_cmds
 endfor
 
 if !exists('g:fuzzyfinders_file_cmd')
-  if has('unix')
-    let g:fuzzyfinders_file_cmd = 'find -L . -type f'
-  elseif has('win32')
-    let g:fuzzyfinders_file_cmd = 'dir . /-n /b /s /a-d'
-  else
-    echomsg "Please install a file finder such as fd, ripgrep or the silver searcher or point g:fuzzyfinders_file_cmds to valid executables!"
-    finish
-  endif
+  echomsg "Please install a file finder such as fd, ripgrep or the silver searcher or point g:fuzzyfinders_file_cmds to valid executables!"
+  finish
 endif
 
 for fuzzyfinders_dir_cmd in fuzzyfinders_dir_cmds
@@ -36,14 +30,8 @@ for fuzzyfinders_dir_cmd in fuzzyfinders_dir_cmds
 endfor
 
 if !exists('g:fuzzyfinders_dir_cmd')
-  if has('unix')
-    let g:fuzzyfinders_dir_cmd = 'find -L . -type d'
-  elseif has('win32')
-    let g:fuzzyfinders_dir_cmd = 'dir . /-n /b /s /a:d'
-  else
-    echomsg "Please install a directory finder such as fd or point g:fuzzyfinders_dir_cmds to valid executables!"
-    finish
-  endif
+  echomsg "Please install a directory finder such as fd or point g:fuzzyfinders_dir_cmds to valid executables!"
+  finish
 endif
 
 if g:fuzzyfinders_use_scheduler

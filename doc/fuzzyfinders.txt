@@ -25,6 +25,7 @@ by default set to
   \ 'sk',
   \ 'fzy',
   \ 'fzf',
+  \ 'gof',
   \ 'peco',
   \ ]
 <

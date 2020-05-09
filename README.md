@@ -1,7 +1,7 @@
 This is a minimalist's Vim plug-in that selects a sensible
 
-- fuzzy matcher (by default, among, in this order, `sk`, `fzy`, `fzf` and `peco`) and
-- file finder (by default, among, in this order, `fd`, `ripgrep`, `ag` and `find`, on Unix, or `dir`, on Microsoft Windows)
+- fuzzy matcher (by default, among, in this order, [skim](https://github.com/lotabout/skim/releases/), [fzy](https://github.com/aperezdc/zsh-fzy), [fzf](https://github.com/junegunn/fzf-bin/releases), [gof](https://github.com/mattn/gof/releases) and [peco](https://github.com/peco/peco/)) and
+- file finder (by default, among, in this order, [fd](https://github.com/sharkdp/fd), [ripgrep](https://github.com/BurntSushi/ripgrep), [ag](https://github.com/ggreer/the_silver_searcher) and [find](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/find.html), on Unix, or `dir`, on Microsoft Windows)
 
 to provide
 
@@ -18,6 +18,7 @@ by default set to
   \ 'sk',
   \ 'fzy',
   \ 'fzf',
+  \ 'gof',
   \ 'peco',
   \ ]
 ```

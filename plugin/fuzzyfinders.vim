@@ -12,6 +12,7 @@ if !exists('g:fuzzyfinders_matchers')
   \ 'sk',
   \ 'fzy',
   \ 'fzf',
+  \ 'gof',
   \ 'peco',
   \ ]
 endif

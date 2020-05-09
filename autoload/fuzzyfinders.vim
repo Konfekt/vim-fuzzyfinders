@@ -6,7 +6,7 @@ for fuzzyfinders_matcher in fuzzyfinders_matchers
 endfor
 
 if !exists('g:fuzzyfinders_matcher')
-  echomsg "Please install a fuzzy matcher such as sk, fzy, fzf, peco or point g:fuzzyfinders_matchers to valid executables!"
+  echomsg "Please install a fuzzy matcher such as sk, fzy, fzf, gof, peco or point g:fuzzyfinders_matchers to valid executables!"
   finish
 endif
 

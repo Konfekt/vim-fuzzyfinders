@@ -63,6 +63,14 @@ For example, to disable the mapping `<c-p>`,
 nmap  <sid>(DisableFuzzyFinderFileWorkDir)  <Plug>(FuzzyFinderFileWorkDir)
 ```
 
-# Related
+# Related Plug-ins
+
+See [fuzzyfinders.sh](https://github.com/Konfekt/fuzzyfinders.sh) to add key bindings in `Bash` and `ZSH` to insert, right at the cursor position, a fuzzily found
+
+- command line of the history ,
+- file path,
+- directory path ,
+- the path of a recently changed file , or
+- the path of a directory recently changed to or of a subdirectory in the current directory.
 
 The plug-in [vim-picker](https://github.com/srstevenson/vim-picker) uses `git ls-files` whenever the directory is inside a Git repository, and `fd` otherwise.

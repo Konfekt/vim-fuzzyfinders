@@ -78,6 +78,191 @@ if !has('gui_running')
   function! fuzzyfinders#select(shell_cmd, prompt) abort
     return system(a:shell_cmd . ' | ' . g:fuzzyfinders_matcher . ' --prompt "' . a:prompt . '"')
   endfunction
+" elseif !has('terminal')
+
+  " call term_start(l:cmd, {'term_name': 'Fz', 'curwin': l:ctx['buf'], 'exit_cb': function('s:exit_cb', [l:ctx]), 'tty_type': 'conpty', 'cwd': l:ctx['basepath']})
+  "
+  " " first argument is the ctx
+  " " neovim passes third argument as 'exit' while vim passes only 2 arguments
+  " function! s:exit_cb(ctx, job, st, ...) abort
+  "   if has_key(a:ctx, 'tmp_input') && !has_key(a:ctx, 'file')
+  "     call delete(a:ctx['tmp_input'])
+  "   endif
+  "   if a:st != 0
+  "     call s:wipe(a:ctx)
+  "     call delete(a:ctx['tmp_result'])
+  "     return
+  "   endif
+  "   silent! call ch_close(job_getchannel(term_getjob(a:ctx['buf'])))
+  "   let l:items = readfile(a:ctx['tmp_result'])
+  "   call delete(a:ctx['tmp_result'])
+  "   call s:wipe(a:ctx)
+  "   if len(l:items) == 0
+  "     return
+  "   endif
+  "   if has_key(a:ctx['options'], 'accept')
+  "     let l:params = {}
+  "     if has_key(a:ctx, 'actions')
+  "       let l:params['actions'] = a:ctx['actions']
+  "       if has_key(l:params['actions'], l:items[0])
+  "         let l:params['action'] = l:params['actions'][l:items[0]]
+  "       else
+  "         let l:params['action'] = l:items[0]
+  "       endif
+  "       let l:params['items'] = l:items[1:]
+  "     else
+  "       let l:params['items'] = l:items
+  "     endif
+  "     call a:ctx['options']['accept'](l:params)
+  "   else
+  "     if has_key(a:ctx, 'actions')
+  "       let l:action = l:items[0]
+  "       let l:items = l:items[1:]
+  "     else
+  "       let l:action = ''
+  "     endif
+  "
+  "     if len(l:items) ==# 1 && l:action ==# ''
+  "       let l:path = expand(l:items[0])
+  "       if !s:absolute_path(l:path)
+  "         let l:path = a:ctx.basepath . '/' . l:path
+  "       endif
+  "       if filereadable(expand(l:path))
+  "         exe 'edit' l:path
+  "       endif
+  "     else
+  "       for l:item in l:items
+  "         let l:path = expand(l:item)
+  "         if !s:absolute_path(l:path)
+  "           let l:path = a:ctx.basepath . '/' . l:path
+  "         endif
+  "         if filereadable(expand(l:path))
+  "           if l:action == ''
+  "             exe 'sp' l:path
+  "           else
+  "             exe a:ctx['actions'][l:action] . ' ' . l:path
+  "           endif
+  "         endif
+  "       endfor
+  "     endif
+  "   endif
+  " endfunction
+
+  " function! fuzzyfinders#file(list_command, vim_command, ...) abort
+  "   " Create a callback that executes a Vim command against the user's
+  "   " selection escaped for use as a filename, and invoke Picker() with
+  "   " that callback.
+  "   "
+  "   " Parameters
+  "   " ----------
+  "   " list_command : String
+  "   "     Shell command to generate list user will choose from.
+  "   " vim_command : String
+  "   "     Readable representation of the Vim command which will be
+  "   "     invoked against the user's selection, for display in the
+  "   "     statusline.
+  "   let l:callback = {'vim_command': a:vim_command}
+  "
+  "   if a:0 > 0
+  "       let l:callback['cwd'] = a:1
+  "   endif
+  "
+  "   function! l:callback.on_select(selection) abort
+  "       if has_key(l:self, 'cwd') && strlen(l:self.cwd)
+  "           let filename = simplify(fnamemodify(l:self.cwd . '/' . a:selection, ':p:~:.'))
+  "           exec l:self.vim_command fnameescape(filename)
+  "       else
+  "           exec l:self.vim_command fnameescape(a:selection)
+  "       endif
+  "   endfunction
+  "
+  "   call fuzzyfinders#finder(a:list_command, a:vim_command, l:callback)
+  " endfunction
+  "
+  " function! fuzzyfinders#finder(list_command, vim_command, callback) abort
+  "   " Invoke callback.on_select on the line of output of list_command
+  "   " selected by the user, using PickerTermopen() in Neovim and
+  "   " PickerSystemlist() otherwise.
+  "   "
+  "   " Parameters
+  "   " ----------
+  "   " list_command : String
+  "   "     Shell command to generate list user will choose from.
+  "   " vim_command : String
+  "   "     Readable representation of the Vim command which will be
+  "   "     invoked against the user's selection, for display in the
+  "   "     statusline.
+  "   " callback.on_select : String -> Void
+  "   "     Function executed with the item selected by the user as the
+  "   "     first argument.
+  "   if !executable(g:picker_selector_executable)
+  "       echoerr 'vim-picker:' g:picker_selector_executable 'executable not found'
+  "       return
+  "   endif
+  "
+  "   call fuzzyfinders#termstart(a:list_command, a:vim_command, a:callback)
+  " endfunction
+  "
+  " function! fuzzyfinders#termstart(list_command, vim_command, callback) abort
+  "   " Open a Vim terminal emulator buffer in a new window using term_start,
+  "   " execute list_command piping its output to the fuzzy selector, and call
+  "   " callback.on_select with the item selected by the user as the first
+  "   " argument.
+  "   "
+  "   " Parameters
+  "   " ----------
+  "   " list_command : String
+  "   "     Shell command to generate list user will choose from.
+  "   " vim_command : String
+  "   "     Readable representation of the Vim command which will be
+  "   "     invoked against the user's selection, for display in the
+  "   "     statusline.
+  "   " callback.on_select : String -> Void
+  "   "     Function executed with the item selected by the user as the
+  "   "     first argument.
+  "   let l:callback = {
+  "               \ 'window_id': win_getid(),
+  "               \ 'filename': tempname(),
+  "               \ 'callback': a:callback
+  "               \ }
+  "
+  "   let l:directory = getcwd()
+  "   if has_key(a:callback, 'cwd') && isdirectory(a:callback.cwd)
+  "       let l:callback['cwd'] = a:callback.cwd
+  "       let l:directory = a:callback.cwd
+  "   endif
+  "
+  "   function! l:callback.exit_cb(...) abort
+  "       close!
+  "       call win_gotoid(l:self.window_id)
+  "       if filereadable(l:self.filename)
+  "           try
+  "               call l:self.callback.on_select(readfile(l:self.filename)[0])
+  "           catch /E684/
+  "           endtry
+  "           call delete(l:self.filename)
+  "       endif
+  "   endfunction
+  "
+  "   let l:options = {
+  "               \ 'curwin': 1,
+  "               \ 'exit_cb': l:callback.exit_cb,
+  "               \ }
+  "
+  "   if strlen(l:directory)
+  "       let l:options.cwd = l:directory
+  "   endif
+  "
+  "   execute g:picker_split g:picker_height . 'new'
+  "   let l:term_command = a:list_command . '|'
+  "               \ . g:picker_selector_executable .  ' '
+  "               \ . g:picker_selector_flags .
+  "               \ '>' . l:callback.filename
+  "   let s:picker_buf_num = term_start([&shell, &shellcmdflag, l:term_command],
+  "               \ l:options)
+  "   startinsert
+  " endfunction
+
 else
   function! fuzzyfinders#select(shell_cmd, prompt) abort
     let choices = fuzzyfinders#finder(a:shell_cmd, a:prompt)
